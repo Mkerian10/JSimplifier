@@ -10,7 +10,9 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation 'org.ow2.asm:asm:7.0'
-
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    compile "org.ow2.asm:asm-tree:7.0"
+    compile "org.ow2.asm:asm-util:7.0"
+    compileOnly "org.projectlombok:lombok:1.16.16"
 }

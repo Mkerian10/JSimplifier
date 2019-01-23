@@ -1,7 +1,10 @@
 package src.com.showtimedev.io;
 
-import jdk.internal.org.objectweb.asm.ClassReader;
-import jdk.internal.org.objectweb.asm.tree.ClassNode;
+
+import lombok.experimental.UtilityClass;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.util.ASMifier;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,9 +14,10 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+@UtilityClass
 public class Input{
 	
-	public static Collection<ClassNode> importClassesFromJarFile(JarFile jf) throws IOException{
+	public Collection<ClassNode> importClassesFromJarFile(JarFile jf) throws IOException{
 		
 		List<ClassNode> classes = new ArrayList<>();
 		
@@ -24,9 +28,11 @@ public class Input{
 			
 			ClassNode cn = new ClassNode();
 			try{
-				ClassReader cr = new ClassReader(jf.getInputStream(je));
-				cr.accept(cn, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
-				classes.add(cn);
+				if(je.getName().endsWith(".class")){
+					ClassReader cr = new ClassReader(jf.getInputStream(je));
+					cr.accept(cn, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+					classes.add(cn);
+				}
 			}catch(IOException e){
 				e.printStackTrace();
 				throw new IOException("Error accessing " + jf.getName() + " input stream.");
