@@ -3,7 +3,6 @@ package src.com.showtimedev.core.extended;
 import lombok.RequiredArgsConstructor;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TryCatchBlockNode;
 
 @RequiredArgsConstructor
 public class MethodWrapper{
@@ -11,6 +10,10 @@ public class MethodWrapper{
 	public final ClassNode owner;
 	
 	public final MethodNode mn;
+	
+	public String getFormatted(){
+		return owner.name + "#" + mn.name + mn.desc;
+	}
 	
 	@Override
 	public String toString(){

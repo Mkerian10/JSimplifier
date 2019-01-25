@@ -3,9 +3,9 @@ package src.com.showtimedev.core.cfg;
 import lombok.Getter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
-public final class DualBlockTerminator extends BlockTerminator{
+public final class DualBlockEdge extends BlockEdge{
 	
-	public DualBlockTerminator(AbstractInsnNode instruction, Block trueBlock, Block falseBlock){
+	public DualBlockEdge(AbstractInsnNode instruction, Block trueBlock, Block falseBlock){
 		super(instruction);
 		this.trueBlock = trueBlock;
 		this.falseBlock = falseBlock;

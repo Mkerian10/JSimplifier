@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 /**
  * Block represents a block in a control graph. Defined as a sequence of instructions guaranteed to be executed contiguously
- * barring any exception being thrown. The next Block is defined by the field <code>BlockTerminator</code>. The class also contains
+ * barring any exception being thrown. The next Block is defined by the field <code>BlockEdge</code>. The class also contains
  * the ability to break out into <code>catch</code> blocks, however not <code>finally</code> blocks.
  */
 @RequiredArgsConstructor
@@ -53,7 +53,7 @@ public class Block{
 	
 	@Getter
 	@Setter(AccessLevel.PACKAGE)
-	private BlockTerminator terminator;
+	private BlockEdge terminator;
 	
 	public void addTributary(Block tributary){
 		tributaryBlock.add(tributary);

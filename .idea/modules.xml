@@ -5,6 +5,10 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.iml" filepath="$PROJECT_DIR$/.idea/modules/1.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/1_main.iml" filepath="$PROJECT_DIR$/.idea/modules/1_main.iml" group="1" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/1_test.iml" filepath="$PROJECT_DIR$/.idea/modules/1_test.iml" group="1" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TestJar.TestJar.iml" filepath="$PROJECT_DIR$/.idea/modules/TestJar.TestJar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test.test.iml" filepath="$PROJECT_DIR$/.idea/modules/test.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test.test.main.iml" filepath="$PROJECT_DIR$/.idea/modules/test.test.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test.test.test.iml" filepath="$PROJECT_DIR$/.idea/modules/test.test.test.iml" />
     </modules>
   </component>
 </project>

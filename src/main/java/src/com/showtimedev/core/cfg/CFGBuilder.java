@@ -4,10 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.TryCatchBlockNode;
+import org.objectweb.asm.tree.*;
 import src.com.showtimedev.core.extended.MethodWrapper;
 
 import java.util.*;
@@ -106,13 +103,17 @@ public final class CFGBuilder implements Opcodes{
 			controlFlowGraph.addBlockToCollection(curr);
 			controlFlowGraph.getInstructions().addAll(curr.getBlockInsns());
 			
-			BlockTerminator bt = curr.getTerminator();
+			BlockEdge bt = curr.getTerminator();
 			
-			if(bt instanceof SingleblockTerminator){
-				offBranches.addLast(((SingleblockTerminator) bt).getNextBlock());
-			}else if(bt instanceof DualBlockTerminator){
-				offBranches.addLast(((DualBlockTerminator) bt).getFalseBlock());
-				offBranches.addLast(((DualBlockTerminator) bt).getTrueBlock());
+			if(bt instanceof SingleblockEdge){
+				offBranches.addLast(((SingleblockEdge) bt).getNextBlock());
+			}else if(bt instanceof DualBlockEdge){
+				offBranches.addFirst(((DualBlockEdge) bt).getFalseBlock());
+				offBranches.addLast(((DualBlockEdge) bt).getTrueBlock());
+			}else if(bt instanceof SwitchBlockEdge){
+				for(Block b: bt.terminatingBlocks()){
+					offBranches.addLast(b);
+				}
 			}
 		}
 	}
@@ -177,11 +178,32 @@ public final class CFGBuilder implements Opcodes{
 					the jump condition (true)
 					 */
 					return handleIfCase(b, (JumpInsnNode) insn);
+					
+				case TABLESWITCH:
+					TableSwitchInsnNode table = (TableSwitchInsnNode) insn;
+					handleSwitchStatement(b, insn, table.labels, table.dflt);
+					return b;
+				case LOOKUPSWITCH:
+					LookupSwitchInsnNode lookup = (LookupSwitchInsnNode)insn;
+					handleSwitchStatement(b, insn, lookup.labels, lookup.dflt);
+					return b;
 				
 			}
 		}
 		
 		return b;
+	}
+	
+	private void handleSwitchStatement(Block entry, AbstractInsnNode insn, List<LabelNode> labels, LabelNode dflt){
+		Map<LabelNode, Block> labelBlockMap = new HashMap<>();
+		
+		for(LabelNode l: labels){
+			labelBlockMap.put(l, buildBlocks(methodWrapper.mn.instructions.indexOf(l)));
+		}
+		
+		labelBlockMap.put(dflt, buildBlocks(methodWrapper.mn.instructions.indexOf(dflt)));
+		
+		entry.setTerminator(new SwitchBlockEdge(insn, labelBlockMap));
 	}
 	
 	private Block handleIfCase(Block b, JumpInsnNode jump){
@@ -190,25 +212,25 @@ public final class CFGBuilder implements Opcodes{
 		//Follow control flow of the jump
 		Block trueBlock = buildBlocks(methodWrapper.mn.instructions.indexOf(jump.label));
 		
-		b.setTerminator(new DualBlockTerminator(jump, trueBlock, falseBlock));
+		b.setTerminator(new DualBlockEdge(jump, trueBlock, falseBlock));
 		return b;
 	}
 	
 	private Block handleLabel(Block b, LabelNode ln){
 		Block next = buildBlocks(methodWrapper.mn.instructions.indexOf(ln));
-		b.setTerminator(new SingleblockTerminator(b.getBlockInsns().get(b.instructionAmount() - 1), next));
+		b.setTerminator(new SingleblockEdge(b.getBlockInsns().get(b.instructionAmount() - 1), next));
 		return b;
 	}
 	
 	private Block handleGoto(Block b, JumpInsnNode insn){
 		Block jumpBlock = buildBlocks(methodWrapper.mn.instructions.indexOf(insn.label));
-		SingleblockTerminator sbt = new SingleblockTerminator(insn, jumpBlock);
+		SingleblockEdge sbt = new SingleblockEdge(insn, jumpBlock);
 		b.setTerminator(sbt);
 		return b;
 	}
 	
 	private Block handleReturnOpcodes(Block b, AbstractInsnNode insn){
-		RetBlockTerminator terminator = new RetBlockTerminator(insn);
+		RetBlockEdge terminator = new RetBlockEdge(insn);
 		b.setTerminator(terminator);
 		return b;
 	}

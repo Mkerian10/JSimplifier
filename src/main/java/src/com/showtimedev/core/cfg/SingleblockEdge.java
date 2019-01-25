@@ -3,9 +3,9 @@ package src.com.showtimedev.core.cfg;
 import lombok.Getter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
-public final class SingleblockTerminator extends BlockTerminator{
+public final class SingleblockEdge extends BlockEdge{
 	
-	public SingleblockTerminator(AbstractInsnNode instruction, Block nextBlock){
+	public SingleblockEdge(AbstractInsnNode instruction, Block nextBlock){
 		super(instruction);
 		this.nextBlock = nextBlock;
 	}

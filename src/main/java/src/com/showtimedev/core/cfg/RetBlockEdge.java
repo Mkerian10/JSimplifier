@@ -2,9 +2,9 @@ package src.com.showtimedev.core.cfg;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 
-public final class RetBlockTerminator extends BlockTerminator{
+public final class RetBlockEdge extends BlockEdge{
 	
-	public RetBlockTerminator(AbstractInsnNode instruction){
+	public RetBlockEdge(AbstractInsnNode instruction){
 		super(instruction);
 	}
 	

@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.objectweb.asm.tree.AbstractInsnNode;
 
 @RequiredArgsConstructor
-public abstract class BlockTerminator{
+public abstract class BlockEdge{
 	
 	/**
 	 * Instruction in question for the block terminator
 	 */
-	private final AbstractInsnNode instruction;
+	protected final AbstractInsnNode instruction;
 	
 	/**
 	 * @return The amount of blocks able to be found via the block terminator
